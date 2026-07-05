@@ -7,7 +7,7 @@ const Footer = () => {
                 <div className="flex items-center gap-2.5">
                     <img src={mainlogo} alt="Main Logo" className="h-11" />
                 </div>
-                <div className="text-sm text-gray-400">© 2026 ChefAI. All rights reserved.</div>
+                <div className="text-sm text-gray-400">© 2026 what.cook. All rights reserved.</div>
             </div>
         </footer>
     );

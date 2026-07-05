@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useContext } from 'react';
 import { 
   ChefHat, 
   Flame, 
@@ -12,9 +12,11 @@ import {
   Leaf
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { DataContext } from '../context/DataContext.jsx';
 
 export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
+  const { prompt, setPrompt } = useContext(DataContext);
 
   const features = [
     {
@@ -87,6 +89,8 @@ export default function Home() {
               <Search className="w-5 h-5 text-gray-400 ml-3" />
               <input 
                 type="text" 
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
                 placeholder="What ingredients do you have?"
                 className="flex-1 px-4 py-3 bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
               />

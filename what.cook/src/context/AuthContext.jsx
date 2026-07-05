@@ -9,6 +9,7 @@ const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
+    console.log(user)
 
     const runAuthAction = useCallback(async (action) => {
         try {

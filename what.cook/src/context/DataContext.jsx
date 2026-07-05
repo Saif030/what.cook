@@ -13,13 +13,14 @@ const DataContextProvider = ({ children }) => {
     const [allRecipes, setAllRecipes] = useState(null);
     const [specificRecipe, setSpecificRecipe] = useState(null);
     const [userLikedRecipes, setUserLikedRecipes] = useState(null);
+    const [prompt, setPrompt] = useState("");
 
     const aiCook = async (prompt) => {
         try {
             setLoading(true);
             const { jwt } = await getJwt();
 
-            const response = await axios.post("http://localhost:3000/user", {prompt} ,{headers: {"Content-Type": "application/json","Authorization": `Bearer ${jwt}`}});
+            const response = await axios.post("https://cook-backend-nu.vercel.app/user", {prompt} ,{headers: {"Content-Type": "application/json","Authorization": `Bearer ${jwt}`}});
             await uploadRecipe(response?.data?.response);
             setData(response.data);
         } catch (error) {
@@ -114,10 +115,17 @@ const DataContextProvider = ({ children }) => {
             setLoading(false);
         }
     };
+
+    const handleGenerate = async (e) => {
+        e.preventDefault();
+        if (!prompt.trim()) return;
+        await aiCook(prompt);
+        setPrompt("");
+    }
     
 
     return (
-        <DataContext.Provider value={{aiCook, data, loading, userRecipes , fetchAllRecipes , allRecipes , getUserRecipes , getSpecificRecipe , specificRecipe, delSpecificRecipe, Feedback, postLiked, getUserLikedRecipes , userLikedRecipes}}>
+        <DataContext.Provider value={{aiCook, data, loading, userRecipes , fetchAllRecipes , allRecipes , getUserRecipes , getSpecificRecipe , specificRecipe, delSpecificRecipe, Feedback, postLiked, getUserLikedRecipes , userLikedRecipes , prompt, setPrompt, handleGenerate}}>
             {children}
         </DataContext.Provider>
     );

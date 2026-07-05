@@ -6,10 +6,10 @@ import aiCookController from "./src/controllers/ai.controller.js";
 import { Authenticate } from "./src/middlewares/auth.middleware.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.use(cors({
-  origin: ["http://localhost:5173"]
+  origin: ["http://localhost:5173","https://what-cooks.vercel.app"]
 }));
 
 app.use(express.json());

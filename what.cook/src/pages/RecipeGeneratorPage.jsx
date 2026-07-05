@@ -10,14 +10,12 @@ import { DataContext } from '../context/DataContext.jsx';
 import ResultShow from '../components/ResultShow.jsx';
 
 export default function RecipeGeneratorPage() {
-  const [prompt, setPrompt] = useState('');
-  const { aiCook, data, loading } = useContext(DataContext);
+  const { aiCook, data, loading , prompt, setPrompt, handleGenerate } = useContext(DataContext);
   const recipeData = data?.response;
 
-  const handleGenerate = async (e) => {
-    e.preventDefault();
-    if (!prompt.trim()) return;
-    await aiCook(prompt);
+  const handleGenerateFromSuggestion = async (suggestion) => {
+    setPrompt(suggestion);
+    await aiCook(suggestion);
   };
 
   const suggestions = [
@@ -28,7 +26,7 @@ export default function RecipeGeneratorPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-800 flex flex-col">
+    <div className="min-h-[89vh] bg-gray-50 font-sans text-gray-800 flex flex-col">
       <div className="flex-1 max-w-4xl mx-auto w-full px-6 py-8 mt-16">
         {!loading && !recipeData ? (
           /* Initial State */
@@ -63,7 +61,7 @@ export default function RecipeGeneratorPage() {
               {suggestions.map((s, i) => (
                 <button
                   key={i}
-                  onClick={() => setPrompt(s)}
+                  onClick={() => handleGenerateFromSuggestion(s)}
                   className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:border-orange-300 hover:text-orange-600 hover:bg-orange-50 transition-all"
                 >
                   {s}
