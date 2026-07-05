@@ -12,13 +12,12 @@ import {
   ListOrdered,
   Image as ImageIcon
 } from 'lucide-react';
-import { useState } from 'react';
 import { useContext } from 'react';
 import { DataContext } from '../context/DataContext';
 
 const ResultShow = ({value}) => {
     const { postLiked } = useContext(DataContext);
-    const { $id , prompt , calories, dish_name, aiResponse : steps, carbs, protein, total_likes , is_liked , fat, ingredients = [], time_require , category } = value || {};
+    const { $id , prompt , calories, dish_name, aiResponse : steps, carbs, protein, total_likes , is_liked , fat, ingredients = [], time_require , category , image_url } = value || {};
     const categories = [
       { name: 'All', icon: <ChefHat className="w-4 h-4 text-orange-300" /> },
       { name: 'Vegan', icon: <Leaf className="w-4 h-4 text-green-300" /> },
@@ -34,7 +33,7 @@ const ResultShow = ({value}) => {
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
             {/* Image Placeholder */}
             <div className="h-64 bg-linear-to-br from-orange-50 via-yellow-50 to-white flex items-center justify-center relative">
-                <ImageIcon className="w-16 h-16 text-gray-300" />
+                {image_url ? <img src={image_url} alt="Recipe" className="w-full h-full object-cover" /> : <ImageIcon className="w-16 h-16 text-gray-300" />}
                 <div className="absolute top-4 right-4 flex gap-2">
                     <button 
                         onClick={() => {
@@ -46,7 +45,7 @@ const ResultShow = ({value}) => {
                         {/* {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-gray-600" />} */}
                       </button>
                     </div>
-                    <div className="absolute bottom-4 left-4 flex gap-2">
+                    <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
                       <span className="px-3 py-1.5 bg-white/90 backdrop-blur rounded-full text-xs font-bold text-gray-700 flex items-center gap-1">
                         <Flame className="w-3.5 h-3.5 text-orange-500" /> {calories} cal
                       </span>
@@ -95,13 +94,13 @@ const ResultShow = ({value}) => {
                     </div>
 
                     {/* Macros */}
-                    <div className="flex gap-4 mb-8 p-4 bg-linear-to-r from-orange-50 to-yellow-50 rounded-2xl border border-orange-100">
+                    <div className="flex flex-wrap gap-4 mb-8 p-4 bg-linear-to-r from-orange-50 to-yellow-50 rounded-2xl border border-orange-100">
                       {[
                         { label: 'Protein', value: protein, color: 'text-orange-600' },
                         { label: 'Carbs', value: carbs, color: 'text-yellow-600' },
                         { label: 'Fats', value: fat, color: 'text-green-600' },
                       ].map((macro, i) => (
-                        <div key={i} className="flex-1 text-center">
+                        <div key={i} className="flex-1 min-w-[80px] text-center">
                           <div className={`text-lg font-bold ${macro.color}`}>{macro.value}</div>
                           <div className="text-xs text-gray-500">{macro.label}</div>
                         </div>

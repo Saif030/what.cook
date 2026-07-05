@@ -96,7 +96,7 @@ export default function PublicRecipesPage() {
                 <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-orange-600 cursor-pointer transition-colors">{recipe.prompt.slice(0, 50)}{recipe.prompt.length > 50 ? '...' : ''}</h3>
                 <p className="text-xs text-gray-400 mb-3">by {recipe.userId.username}</p>
                 
-                <div className="flex items-center gap-3 text-sm text-gray-500 mb-4">
+                <div className="flex items-center gap-3 text-sm text-gray-500 mb-4 flex-wrap">
                   <span className="flex items-center gap-1"><Flame className="w-3.5 h-3.5" /> {recipe.calories}</span>
                   <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {recipe.time_require}</span>
                 </div>

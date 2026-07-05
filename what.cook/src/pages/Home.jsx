@@ -71,7 +71,7 @@ export default function Home() {
             <span>AI-Powered Kitchen Assistant</span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-gray-900 mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-gray-900 mb-6 leading-tight">
             Cook Smarter, <br />
             <span className="bg-gradient-to-r from-orange-500 via-yellow-500 to-green-500 bg-clip-text text-transparent">
               Eat Better
@@ -86,15 +86,15 @@ export default function Home() {
           <div className="max-w-xl mx-auto relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-orange-200 to-yellow-200 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
             <div className="relative flex items-center bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-2">
-              <Search className="w-5 h-5 text-gray-400 ml-3" />
+              <Search className="w-5 h-5 text-gray-400 ml-3 shrink-0" />
               <input 
                 type="text" 
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="What ingredients do you have?"
-                className="flex-1 px-4 py-3 bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
+                className="flex-1 min-w-0 px-4 py-3 bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
               />
-              <Link to="/recipe-generator" className="px-6 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors flex items-center gap-2">
+              <Link to="/recipe-generator" className="shrink-0 px-6 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors flex items-center gap-2">
                 Cook <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -105,7 +105,7 @@ export default function Home() {
             {stats.map((stat, i) => (
               <div key={i} className="p-4 rounded-2xl bg-gray-50 border border-gray-100 flex flex-col items-center gap-2">
                 <div className="text-gray-400">{stat.icon}</div>
-                <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
+                <div className="text-xl sm:text-2xl font-bold text-gray-900">{stat.value}</div>
                 <div className="text-xs text-gray-500 font-medium">{stat.label}</div>
               </div>
             ))}

@@ -27,7 +27,7 @@ export default function RecipeGeneratorPage() {
 
   return (
     <div className="min-h-[89vh] bg-gray-50 font-sans text-gray-800 flex flex-col">
-      <div className="flex-1 max-w-4xl mx-auto w-full px-6 py-8 mt-16">
+      <div className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 mt-16">
         {!loading && !recipeData ? (
           /* Initial State */
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
@@ -95,11 +95,11 @@ export default function RecipeGeneratorPage() {
 
                 {/* New Prompt */}
                 <form onSubmit={handleGenerate} className="relative">
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <button 
                       type="button"
                       onClick={() => { setPrompt(''); }}
-                      className="px-4 py-3 bg-gray-100 text-gray-600 rounded-2xl hover:bg-gray-200 transition-colors flex items-center gap-2"
+                      className="px-4 py-3 bg-gray-100 text-gray-600 rounded-2xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 shrink-0"
                     >
                       <RotateCcw className="w-4 h-4" /> New
                     </button>

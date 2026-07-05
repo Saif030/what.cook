@@ -12,7 +12,7 @@ const RecipesShow = () => {
     },[id])
 
     return (
-        <div className="flex-1 max-w-4xl mx-auto w-full px-6 py-8 mt-16">
+        <div className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 mt-16">
             <RsultShow value={specificRecipe} />
         </div>
     );

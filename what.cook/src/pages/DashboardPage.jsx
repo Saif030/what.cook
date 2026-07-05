@@ -125,7 +125,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-gray-900 truncate">{recipe.prompt}</h4>
-                      <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
+                      <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 flex-wrap">
                         <span className="flex items-center gap-1"><Flame className="w-3.5 h-3.5" /> {recipe.calories}</span>
                         <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {recipe.time_require}</span>
                         <Link to={`/recipe/${recipe.$id}`}><ExternalLink className="w-6 h-6 p-1 hover:bg-gray-200 rounded-full cursor-pointer" /></Link>
