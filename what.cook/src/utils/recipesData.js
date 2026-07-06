@@ -24,7 +24,7 @@ const getAllRecipes = async () => {
             databaseId: DATABASE_ID,
             tableId: RECIPE_COLLECTION_ID,
             queries: [
-                Query.select(['prompt','calories','time_require','category','userId.username'])
+                Query.select(['prompt','calories','time_require','category','userId.username','image_url'])
             ]
         });
         return response;

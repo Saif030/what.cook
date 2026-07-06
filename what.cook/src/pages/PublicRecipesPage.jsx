@@ -35,6 +35,8 @@ export default function PublicRecipesPage() {
     { name: 'Seafood', icon: <Fish key="seafood" className="w-12 h-12 text-blue-200" /> },
   ];
 
+  console.log(allRecipes);
+
   const filteredRecipes = activeCategory === 'All'
     ? allRecipes?.rows || []
     : allRecipes?.rows?.filter(r => r.category?.toLowerCase() === activeCategory.toLowerCase()) || [];
@@ -55,7 +57,7 @@ export default function PublicRecipesPage() {
         {/* Search & Filter */}
         <div className="max-w-3xl mx-auto mb-8">
           {/* Categories */}
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap justify-center gap-1">
             {categories.map((cat) => (
               <button
                 key={cat.name}
@@ -86,10 +88,16 @@ export default function PublicRecipesPage() {
             <div key={recipe.$id} className="group bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-gray-200/50 hover:-translate-y-1 transition-all duration-300">
               {/* Image Area */}
               <div className={`h-48 relative flex items-center justify-center`}>
+                {recipe.image_url ? (
+                  <img src={recipe.image_url} alt={recipe.prompt} className="w-full h-full object-cover" />
+                ) : (
+                <>
                 {categoryColors.map((cat) => cat.name.toLowerCase() === recipe.category.toLowerCase() && cat.icon)}
                 <span className={`absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-bold bg-gray-100`}>
                   {recipe.category}
                 </span>
+                </>
+                )}
               </div>
 
               <div className="p-5">

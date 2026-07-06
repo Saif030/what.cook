@@ -81,9 +81,19 @@ const userLikeds = async () => {
     const response = await tablesDB.listRows({
         databaseId: DATABASE_ID,
         tableId: LIKES_COLLECTION_ID,
-        queries: [Query.equal('userId', user.$id)]
+        queries: [Query.equal('userId', user.$id),Query.select(['recipeId.prompt','recipeId.calories','recipeId.time_require','recipeId.category','recipeId.userId.username','recipeId.image_url'])]
     });
     return response;
 }
 
-export { uploadRecipe, likeUpdate , totalLikes , isLiked , userLikeds };
+const recipeImageUpload = async (file) => {
+    try {
+        const response = await storage.createFile(RECIPE_BUCKET_ID, uId, file);
+        return response;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+export { uploadRecipe, likeUpdate , totalLikes , isLiked , userLikeds , recipeImageUpload };

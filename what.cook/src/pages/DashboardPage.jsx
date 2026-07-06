@@ -18,11 +18,12 @@ import { logo } from '../assets/assets.js';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import LikedRecipes from '../components/LikedRecipes.jsx';
 import { DataContext } from '../context/DataContext';
 
 export default function DashboardPage() {
   const { user } = useContext(AuthContext);
-  const { userRecipes , getUserRecipes, delSpecificRecipe, likedRecipes , userLikedRecipes , getUserLikedRecipes } = useContext(DataContext);
+  const { userRecipes , getUserRecipes, delSpecificRecipe, userLikedRecipes , getUserLikedRecipes } = useContext(DataContext);
   let todayCalories = 0;
   if (userRecipes?.rows) {
     userRecipes?.rows.forEach(recipe => {
@@ -31,6 +32,8 @@ export default function DashboardPage() {
       }
     });
   }
+
+  const [showLiked, setShowLiked] = useState(false);
 
   const weeklyStats = [
     { day: 'Mon', calories: 1800 },
@@ -115,6 +118,7 @@ export default function DashboardPage() {
               <div className="flex items-center gap-5 mb-6 px-4">
                 <img src={logo} alt="WhatCook Logo" className="w-12 h-12" />
                 <h3 className="text-lg font-bold text-gray-900">My Recipes</h3>
+                <button onClick={() => setShowLiked(true)} className="text-sm text-orange-600 hover:text-orange-700 font-medium">Show Liked</button>
               </div>
 
               <div className="space-y-3">
@@ -182,6 +186,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      {showLiked && <LikedRecipes userLikedRecipes={userLikedRecipes} isOpen={showLiked} onClose={() => setShowLiked(false)} />}
     </div>
   );
 }
