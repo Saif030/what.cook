@@ -120,6 +120,7 @@ const DataContextProvider = ({ children }) => {
         e.preventDefault();
         if (!prompt.trim()) return;
         await aiCook(prompt);
+        setTempPrompt(prompt);
         setPrompt("");
     }
     

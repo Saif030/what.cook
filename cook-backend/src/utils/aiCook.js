@@ -24,3 +24,4 @@ const aiCook = async (prompt) => {
 }
 
 export default aiCook;
+

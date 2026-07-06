@@ -81,12 +81,13 @@ export default function RecipeGeneratorPage() {
 
             {/* AI Response */}
             {loading ? (
-              <div className="flex items-center justify-center w-full">
+              <div className="flex flex-col items-center justify-center w-full">
                 <DotLottieReact
                   src="https://lottie.host/dcf7087b-f87a-4a3b-ba30-e44359e4d1d6/x8eHn9OCFl.lottie"
                   loop
                   autoplay
                 />
+                <p className="text-sm text-gray-600 mt-2">Generating recipe.....</p>
               </div>
             ) : recipeData ? (
               <div className="space-y-6">
