@@ -41,7 +41,7 @@ export default function RecipeGeneratorPage() {
             <form onSubmit={handleGenerate} className="w-full max-w-2xl relative mb-8">
               <div className="relative">
                 <textarea
-                  value={prompt}
+                  value={prompt || recipeData?.prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="e.g., I have chicken breast, broccoli, and rice. Something healthy and quick..."
                   className="w-full p-5 pr-14 bg-white border border-gray-200 rounded-3xl shadow-lg shadow-gray-100 outline-none focus:border-orange-300 focus:ring-4 focus:ring-orange-100 transition-all resize-none text-gray-700 placeholder:text-gray-400 min-h-30"
@@ -75,7 +75,7 @@ export default function RecipeGeneratorPage() {
             {/* User Prompt Bubble */}
             <div className="flex justify-end">
               <div className="max-w-[80%] bg-gray-900 text-white rounded-3xl rounded-tr-lg px-6 py-4 shadow-lg">
-                <p className="text-sm leading-relaxed">{prompt}</p>
+                <p className="text-sm leading-relaxed">{prompt || recipeData?.prompt}</p>
               </div>
             </div>
 

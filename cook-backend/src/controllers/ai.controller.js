@@ -36,7 +36,7 @@ Provide step‑by‑step cooking instructions, an estimated total calorie count,
 
 Return **only** a JSON object with the following keys (in this exact order):
 {
-  "prompt": "<the exact user request>",
+  "prompt": "<the exact user request not give extra content you are a helpful assistant... this content will not be shown to the user>",
   "aiResponse": ["<detailed cooking step 1>", "<detailed cooking step 2>", "..."],
   "dish_name": "<name of the dish>",
   "calories": <total calories as an integer>,
