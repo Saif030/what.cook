@@ -1,4 +1,4 @@
-import { tablesDB, DATABASE_ID, RECIPE_COLLECTION_ID , LIKES_COLLECTION_ID , uId , account , Query } from "../lib/appWrite.js";
+import { tablesDB, DATABASE_ID, RECIPE_COLLECTION_ID , ENDPOINT,PROJECT_ID , LIKES_COLLECTION_ID , uId , account , Query , storage , RECIPE_BUCKET_ID } from "../lib/appWrite.js";
 
 const uploadRecipe = async (recipe) => {
     try {
@@ -86,14 +86,49 @@ const userLikeds = async () => {
     return response;
 }
 
-const recipeImageUpload = async (file) => {
+const updateRecipeImage = async (recipeId, file) => {
     try {
-        const response = await storage.createFile(RECIPE_BUCKET_ID, uId, file);
-        return response;
+        let fileExists = true;
+        try {
+            await storage.getFile({
+                bucketId: RECIPE_BUCKET_ID,
+                fileId: recipeId
+            });
+        } catch (err) {
+            if (err.code === 404) {
+                fileExists = false;
+            } else {
+                throw err;
+            }
+        }
+
+        if (fileExists) {
+            await storage.deleteFile({
+                bucketId: RECIPE_BUCKET_ID,
+                fileId: recipeId
+            });
+        }
+
+        const response = await storage.createFile({
+            bucketId: RECIPE_BUCKET_ID,
+            fileId: recipeId,
+            file: file
+        });
+
+        const recipe = await tablesDB.updateRow({
+            databaseId: DATABASE_ID,
+            tableId: RECIPE_COLLECTION_ID,
+            rowId: recipeId,
+            data: {
+                image_url: `${ENDPOINT}/storage/buckets/${RECIPE_BUCKET_ID}/files/${response.$id}/view?project=${PROJECT_ID}&v=${Date.now()}`
+            }
+        });
+        return recipe;
     } catch (error) {
-        console.error(error);
+        console.error("updateRecipeImage failed:", error);
         return null;
     }
 };
 
-export { uploadRecipe, likeUpdate , totalLikes , isLiked , userLikeds , recipeImageUpload };
+
+export { uploadRecipe, likeUpdate , totalLikes , isLiked , userLikeds , updateRecipeImage };

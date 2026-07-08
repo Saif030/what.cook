@@ -10,14 +10,21 @@ import {
   Heart,
   Beef,
   ListOrdered,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Upload,
+  Save
 } from 'lucide-react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { DataContext } from '../context/DataContext';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { AuthContext } from '../context/AuthContext';
+
 
 const ResultShow = ({value}) => {
-    const { postLiked } = useContext(DataContext);
-    const { $id , prompt , calories, dish_name, aiResponse : steps, carbs, protein, total_likes , is_liked , fat, ingredients = [], time_require , category , image_url } = value || {};
+    const { user } = useContext(AuthContext);
+    const { postLiked , loading , handleImageUpload } = useContext(DataContext);
+    const [file , setFile] = useState(null);
+    const { $id , prompt , calories, dish_name, aiResponse : steps, carbs, protein, total_likes , is_liked , fat, ingredients = [], time_require , category , image_url , userId } = value || {};
     const categories = [
       { name: 'All', icon: <ChefHat className="w-4 h-4 text-orange-300" /> },
       { name: 'Vegan', icon: <Leaf className="w-4 h-4 text-green-300" /> },
@@ -26,25 +33,50 @@ const ResultShow = ({value}) => {
       { name: 'Gluten-Free', icon: <Wheat className="w-4 h-4 text-yellow-300" /> },
       { name: 'Seafood', icon: <Fish className="w-4 h-4 text-blue-300" /> },
     ];
-
+    
     const categoryIcon = categories.find((cat) => cat.name.toLowerCase() === category?.toLowerCase())?.icon;
+
+    if(loading){
+      return (
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+          <DotLottieReact
+            src="https://lottie.host/773d5408-315c-4c45-8225-a194a55b78fe/609P7xtf59.lottie"
+            loop
+            autoplay
+          />
+        </div>
+      );
+    }
+
+    const handleImageChange = async () => {
+      if(!file) return;
+      await handleImageUpload($id, file);
+      setFile(null);
+
+    }
 
     return (
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
             {/* Image Placeholder */}
             <div className="h-64 bg-linear-to-br from-orange-50 via-yellow-50 to-white flex items-center justify-center relative">
-                {image_url ? <img src={image_url} alt="Recipe" className="w-full h-full object-cover" /> : <ImageIcon className="w-16 h-16 text-gray-300" />}
+                {image_url || file ? <img src={file ? URL.createObjectURL(file) : image_url} alt="Recipe" className="w-full h-full object-cover" /> : <ImageIcon className="w-16 h-16 text-gray-300" />}
                 <div className="absolute top-4 right-4 flex gap-2">
-                    <button 
-                        onClick={() => {
-                          // setCopied(true);
-                          // setTimeout(() => setCopied(false), 2000);
-                        }}
-                        className="p-2.5 bg-white/90 backdrop-blur rounded-xl shadow-sm hover:bg-white transition-all"
-                      >
-                        {/* {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-gray-600" />} */}
-                      </button>
-                    </div>
+                  { user.$id === userId && (
+                    <>
+                      <div className="p-2 bg-white/90 backdrop-blur rounded-full text-gray-700 hover:bg-white transition-colors">
+                        <label htmlFor="image-upload" className="cursor-pointer">
+                          <input type="file" id="image-upload" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
+                          <Upload className="w-5 h-5" />
+                        </label>
+                      </div>
+                      {file && (
+                        <div className="p-2 bg-white/90 backdrop-blur rounded-full text-gray-700 hover:bg-white transition-colors">
+                          <Save className="w-5 h-5" onClick={handleImageChange} />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
                     <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
                       <span className="px-3 py-1.5 bg-white/90 backdrop-blur rounded-full text-xs font-bold text-gray-700 flex items-center gap-1">
                         <Flame className="w-3.5 h-3.5 text-orange-500" /> {calories} cal

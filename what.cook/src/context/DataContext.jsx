@@ -1,7 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useState , useCallback } from "react";
 import axios from "axios";
 import { getJwt , submitFeedback } from "../utils/auth.js";
-import { uploadRecipe , likeUpdate , userLikeds } from "../utils/dbUpload.js";
+import { uploadRecipe , likeUpdate , userLikeds, updateRecipeImage } from "../utils/dbUpload.js";
 import { getDashboardUserData , getAllRecipes, getSpecificRecipeData, deleteRecipe } from "../utils/recipesData.js";
 
 export const DataContext = createContext();
@@ -67,7 +67,7 @@ const DataContextProvider = ({ children }) => {
         }
     };
     
-    const delSpecificRecipe = async (recipeId) => {
+    const delSpecificRecipe = useCallback(async (recipeId) => {
         try {
             setLoading(true);
             const response = await deleteRecipe(recipeId);
@@ -78,7 +78,7 @@ const DataContextProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [getUserRecipes]);
 
     const Feedback = async (formData) => {
         try {
@@ -94,25 +94,19 @@ const DataContextProvider = ({ children }) => {
 
     const postLiked = async (recipeId) => {
         try {
-            setLoading(true);
-            const response = await likeUpdate(recipeId);
-            await getSpecificRecipe(recipeId);
+            await likeUpdate(recipeId);
+            // await getSpecificRecipe(recipeId);
         } catch (error) {
             console.error(error);
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     const getUserLikedRecipes = async () => {
         try {
-            setLoading(true);
             const response = await userLikeds();
             setUserLikedRecipes(response);
         } catch (error) {
             console.error(error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -123,9 +117,20 @@ const DataContextProvider = ({ children }) => {
         setPrompt("");
     }
     
+    const handleImageUpload = async (recipeId, file) => {
+        try {
+            setLoading(true);
+            await updateRecipeImage(recipeId, file);
+            await getSpecificRecipe(recipeId);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
-        <DataContext.Provider value={{aiCook, data, loading, userRecipes , fetchAllRecipes , allRecipes , getUserRecipes , getSpecificRecipe , specificRecipe, delSpecificRecipe, Feedback, postLiked, getUserLikedRecipes , userLikedRecipes , prompt, setPrompt, handleGenerate}}>
+        <DataContext.Provider value={{aiCook, data, loading, userRecipes , fetchAllRecipes , allRecipes , getUserRecipes , getSpecificRecipe , specificRecipe, delSpecificRecipe, Feedback, postLiked, getUserLikedRecipes , userLikedRecipes , prompt, setPrompt, handleGenerate, handleImageUpload}}>
             {children}
         </DataContext.Provider>
     );
