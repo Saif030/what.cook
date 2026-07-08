@@ -6,8 +6,7 @@ import Loader from '../components/Loader.jsx'
 
 const ProtectedLayout = () => {
     const { isAuthenticated, isLoading } = useContext(AuthContext)
-
-    // Always check loading first, or logged-in users will flash the login page on refresh
+    
     if (isLoading) {
         return <Loader />
     }

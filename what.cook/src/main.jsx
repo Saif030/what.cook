@@ -9,11 +9,11 @@ import DataContextProvider from './context/DataContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
         <DataContextProvider>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </DataContextProvider>
-      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 )

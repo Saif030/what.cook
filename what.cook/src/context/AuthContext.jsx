@@ -8,12 +8,9 @@ const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isInitialized, setIsInitialized] = useState(false);
-    console.log(user)
 
     const runAuthAction = useCallback(async (action) => {
         try {
-            setIsLoading(true);
             setError(null);
             const result = await action();
             setUser(result || null);
@@ -30,7 +27,6 @@ const AuthProvider = ({ children }) => {
         }
     }, []);
 
-
     const handleRegister = (username, email, password, isAgree) =>
         runAuthAction(() => register(username, email, password, isAgree));
 
@@ -41,22 +37,9 @@ const AuthProvider = ({ children }) => {
 
     const handleLogout = () => runAuthAction(() => logout());
 
-    // Check if user is already logged in on app mount
     useEffect(() => {
-        const checkAuthStatus = async () => {
-            try {
-                await handleGetUser();
-            } catch (err) {
-                console.error("Auth check failed:", err);
-            } finally {
-                setIsInitialized(true);
-            }
-        };
-        
-        if (!isInitialized) {
-            checkAuthStatus();
-        }
-    }, [isInitialized, handleGetUser]);
+        handleGetUser();
+    }, []);
 
     const value = { user, isLoading, error, handleRegister, handleLogin, handleGetUser, isAuthenticated, handleLogout };
 
