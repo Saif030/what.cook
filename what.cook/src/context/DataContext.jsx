@@ -1,7 +1,7 @@
 import { createContext, useState , useCallback } from "react";
 import axios from "axios";
 import { getJwt , submitFeedback } from "../utils/auth.js";
-import { uploadRecipe , likeUpdate , userLikeds, updateRecipeImage } from "../utils/dbUpload.js";
+import { uploadRecipe , saveUpdate , userSaved , updateRecipeImage , isSaved } from "../utils/dbUpload.js";
 import { getDashboardUserData , getAllRecipes, getSpecificRecipeData, deleteRecipe } from "../utils/recipesData.js";
 
 export const DataContext = createContext();
@@ -12,8 +12,9 @@ const DataContextProvider = ({ children }) => {
     const [userRecipes, setUserRecipes] = useState(null);
     const [allRecipes, setAllRecipes] = useState(null);
     const [specificRecipe, setSpecificRecipe] = useState(null);
-    const [userLikedRecipes, setUserLikedRecipes] = useState(null);
+    const [userSavedRecipes, setUserSavedRecipes] = useState(null);
     const [prompt, setPrompt] = useState("");
+    const [recipeSaved, setRecipeSaved] = useState(false)
 
     const aiCook = async (prompt) => {
         try {
@@ -34,6 +35,8 @@ const DataContextProvider = ({ children }) => {
         try {
             setLoading(true);
             const response = await getDashboardUserData();
+            const savedResponse = await userSaved();
+            setUserSavedRecipes(savedResponse);
             setUserRecipes(response || []);
         } catch (error) {
             console.error(error);
@@ -58,7 +61,7 @@ const DataContextProvider = ({ children }) => {
         try {
             setLoading(true);
             const response = await getSpecificRecipeData(recipeId);
-            setSpecificRecipe({...response.response , total_likes : response.total_likes , is_liked : response.is_liked });
+            setSpecificRecipe(response);
             return response;
         } catch (error) {
             console.error(error);
@@ -92,23 +95,22 @@ const DataContextProvider = ({ children }) => {
         }
     };
 
-    const postLiked = async (recipeId) => {
+    const postSaved = async (recipeId) => {
         try {
-            await likeUpdate(recipeId);
-            // await getSpecificRecipe(recipeId);
+            await saveUpdate(recipeId);
         } catch (error) {
             console.error(error);
         } 
     };
 
-    const getUserLikedRecipes = async () => {
-        try {
-            const response = await userLikeds();
-            setUserLikedRecipes(response);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    // const getUserSavedRecipes = async () => {
+    //     try {
+    //         const response = await userSaved();
+    //         setUserSavedRecipes(response);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
     const handleGenerate = async (e) => {
         e.preventDefault();
@@ -128,9 +130,19 @@ const DataContextProvider = ({ children }) => {
             setLoading(false);
         }
     }
+    
+    const isRecipeSaved = async (recipeId) => {
+        try {
+            const response = await isSaved(recipeId);
+            setRecipeSaved(response?.saved);
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
-        <DataContext.Provider value={{aiCook, data, loading, userRecipes , fetchAllRecipes , allRecipes , getUserRecipes , getSpecificRecipe , specificRecipe, delSpecificRecipe, Feedback, postLiked, getUserLikedRecipes , userLikedRecipes , prompt, setPrompt, handleGenerate, handleImageUpload}}>
+        <DataContext.Provider value={{aiCook, data, loading, userRecipes , postSaved , fetchAllRecipes , allRecipes , getUserRecipes , getSpecificRecipe , specificRecipe, delSpecificRecipe, Feedback, userSavedRecipes , prompt, setPrompt, handleGenerate, handleImageUpload, isRecipeSaved, recipeSaved}}>
             {children}
         </DataContext.Provider>
     );

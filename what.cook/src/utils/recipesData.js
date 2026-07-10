@@ -1,5 +1,4 @@
 import { tablesDB, DATABASE_ID, RECIPE_COLLECTION_ID , account , Query } from "../lib/appWrite.js";
-import { totalLikes , isLiked } from "./dbUpload.js"
 
 const getDashboardUserData = async () => {
     try {
@@ -41,9 +40,7 @@ const getSpecificRecipeData = async (recipeId) => {
             tableId: RECIPE_COLLECTION_ID,
             rowId: recipeId
         });
-        const result = await totalLikes(recipeId);
-        const checkLiked = await isLiked(recipeId);
-        return {response, total_likes : result.total , is_liked : checkLiked?.rows?.length > 0 ? true : false};
+        return response;
     } catch (error) {
         console.error(error);
         return null;

@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { 
-  Heart, 
+  Bookmark,
   X, 
-  ChefHat, 
   Flame, 
   Clock, 
   ArrowRight, 
   Trash2, 
-  Sparkles,
-  Bookmark,
   UtensilsCrossed
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 
 export default function LikedRecipesPage({ isOpen, onClose , userLikedRecipes }) {
@@ -49,10 +47,10 @@ export default function LikedRecipesPage({ isOpen, onClose , userLikedRecipes })
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center">
-                <Heart className="w-5 h-5 text-red-500 fill-red-500" />
+                <Bookmark className="w-5 h-5 text-red-500 fill-red-500" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Liked Recipes</h2>
+                <h2 className="text-xl font-bold text-gray-900">Saved Recipes</h2>
                 <p className="text-xs text-gray-400 font-medium">{recipes.length} saved recipes</p>
               </div>
             </div>
@@ -72,22 +70,23 @@ export default function LikedRecipesPage({ isOpen, onClose , userLikedRecipes })
               <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-50 to-yellow-50 flex items-center justify-center mb-4">
                 <Bookmark className="w-10 h-10 text-orange-300" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">No liked recipes yet</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">No Saved recipes yet</h3>
               <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
-                Start exploring recipes and tap the heart icon to save your favorites here.
+                Start exploring recipes and tap the bookmark icon to save your favorites here.
               </p>
-              <button 
-                onClick={onClose}
+              <Link
+                to="/public-recipes"
                 className="mt-6 px-6 py-2.5 bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-sm font-semibold rounded-full shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:scale-105 transition-all flex items-center gap-2"
               >
                 Explore Recipes <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
           ) : (
             recipes.map((recipe) => (
-              <div 
+              <Link
                 key={recipe.$id}
-                className={`group relative bg-white border border-gray-100 rounded-2xl p-3 hover:border-orange-200 hover:shadow-lg hover:shadow-orange-100/50 transition-all duration-300 ${
+                to={`/recipe/${recipe?.recipeId?.$id}`}
+                className={`group relative cursor-pointer bg-white border border-gray-100 rounded-2xl p-3 hover:border-orange-200 hover:shadow-lg hover:shadow-orange-100/50 transition-all duration-300 ${
                   removingId === recipe.$id ? 'opacity-0 translate-x-8 scale-95' : 'opacity-100'
                 }`}
               >
@@ -134,7 +133,7 @@ export default function LikedRecipesPage({ isOpen, onClose , userLikedRecipes })
 
                 {/* Hover action */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/0 via-orange-500/0 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-              </div>
+              </Link>
             ))
           )}
         </div>

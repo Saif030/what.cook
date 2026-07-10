@@ -1,29 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ChefHat,
   Flame,
-  Clock,
-  Bookmark,
-  TrendingUp,
-  Calendar,
   CookingPot,
   ArrowRight,
   Sparkles,
-  Soup,
-  Heart,
-  ExternalLink,
-  Trash2
+  Bookmark
 } from 'lucide-react';
+import UserRecipes from '../components/UserRecipes.jsx';
 import { logo } from '../assets/assets.js';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import LikedRecipes from '../components/LikedRecipes.jsx';
 import { DataContext } from '../context/DataContext';
+import Loader from '../components/Loader.jsx';
 
 export default function DashboardPage() {
   const { user } = useContext(AuthContext);
-  const { userRecipes , getUserRecipes, delSpecificRecipe, userLikedRecipes , getUserLikedRecipes } = useContext(DataContext);
+  const { userRecipes , getUserRecipes, delSpecificRecipe, userSavedRecipes } = useContext(DataContext);
   let todayCalories = 0;
   if (userRecipes?.rows) {
     userRecipes?.rows.forEach(recipe => {
@@ -47,8 +42,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     getUserRecipes();
-    getUserLikedRecipes();
   }, []);
+
+  if(!userRecipes){
+    return (
+      <Loader />
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
@@ -63,7 +63,7 @@ export default function DashboardPage() {
           {[
             { label: 'Recipes Cooked', value: userRecipes?.total || 0, icon: <ChefHat className="w-5 h-5" />, color: 'from-orange-400 to-yellow-400', shadow: 'shadow-orange-200' },
             { label: 'Calories Today', value: todayCalories, icon: <Flame className="w-5 h-5" />, color: 'from-orange-500 to-red-400', shadow: 'shadow-orange-200' },
-            { label: 'Liked Recipes', value: userLikedRecipes?.total || 0, icon: <Heart className="w-5 h-5" />, color: 'from-red-400 to-orange-400', shadow: 'shadow-yellow-200' },
+            { label: 'Saved Recipes', value: userSavedRecipes?.total || 0, icon: <Bookmark className="w-5 h-5" />, color: 'from-red-400 to-orange-400', shadow: 'shadow-yellow-200' },
           ].map((stat, i) => (
             <div key={i} className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-3">
@@ -118,25 +118,12 @@ export default function DashboardPage() {
               <div className="flex items-center gap-5 mb-6 px-4">
                 <img src={logo} alt="WhatCook Logo" className="w-12 h-12" />
                 <h3 className="text-lg font-bold text-gray-900">My Recipes</h3>
-                <button onClick={() => setShowLiked(true)} className="text-sm text-orange-600 hover:text-orange-700 font-medium">Show Liked</button>
+                <button onClick={() => setShowLiked(true)} className="text-sm text-orange-600 hover:text-orange-700 cursor-pointer bg-orange-100 px-3 py-1 rounded-full font-medium">Show Saved Recipes</button>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 overflow-y-auto max-h-[35vh]">
                 {userRecipes?.rows?.map(recipe => (
-                  <div key={recipe.$id} className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-100 transition-colors cursor-pointer border border-transparent hover:border-gray-100">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-orange-400 flex-shrink-0`}>
-                      <Soup className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-gray-900 truncate">{recipe.prompt}</h4>
-                      <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 flex-wrap">
-                        <span className="flex items-center gap-1"><Flame className="w-3.5 h-3.5" /> {recipe.calories}</span>
-                        <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {recipe.time_require}</span>
-                        <Link to={`/recipe/${recipe.$id}`}><ExternalLink className="w-6 h-6 p-1 hover:bg-gray-200 rounded-full cursor-pointer" /></Link>
-                        <span onClick={() => delSpecificRecipe(recipe.$id)}><Trash2 className="w-6 h-6 p-1 hover:bg-gray-200 rounded-full cursor-pointer" /></span>
-                      </div>
-                    </div>
-                  </div>
+                  <UserRecipes key={recipe.$id} delSpecificRecipe={delSpecificRecipe} recipe={recipe} />
                 ))}
               </div>
 
@@ -186,7 +173,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-      {showLiked && <LikedRecipes userLikedRecipes={userLikedRecipes} isOpen={showLiked} onClose={() => setShowLiked(false)} />}
+      {showLiked && <LikedRecipes userLikedRecipes={userSavedRecipes} isOpen={showLiked} onClose={() => setShowLiked(false)} />}
     </div>
   );
 }

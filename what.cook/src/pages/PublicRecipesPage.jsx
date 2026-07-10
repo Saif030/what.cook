@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useContext } from 'react';
 import { DataContext } from '../context/DataContext';
+import Loader from '../components/Loader';
 
 export default function PublicRecipesPage() {
   const { fetchAllRecipes , allRecipes } = useContext(DataContext);
@@ -34,8 +35,6 @@ export default function PublicRecipesPage() {
     { name: 'Gluten-Free', icon: <Wheat key="gluten-free" className="w-12 h-12 text-yellow-200" /> },
     { name: 'Seafood', icon: <Fish key="seafood" className="w-12 h-12 text-blue-200" /> },
   ];
-
-  console.log(allRecipes);
 
   const filteredRecipes = activeCategory === 'All'
     ? allRecipes?.rows || []
@@ -84,39 +83,43 @@ export default function PublicRecipesPage() {
 
         {/* Recipe Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredRecipes.map((recipe) => (
-            <div key={recipe.$id} className="group bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-gray-200/50 hover:-translate-y-1 transition-all duration-300">
-              {/* Image Area */}
-              <div className={`h-48 relative flex items-center justify-center`}>
-                {recipe.image_url ? (
-                  <img src={recipe.image_url} alt={recipe.prompt} className="w-full h-full object-cover" />
-                ) : (
-                <>
-                {categoryColors.map((cat) => cat.name.toLowerCase() === recipe.category.toLowerCase() && cat.icon)}
-                <span className={`absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-bold bg-gray-100`}>
-                  {recipe.category}
-                </span>
-                </>
-                )}
-              </div>
-
-              <div className="p-5">
-                <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-orange-600 cursor-pointer transition-colors">{recipe.prompt.slice(0, 50)}{recipe.prompt.length > 50 ? '...' : ''}</h3>
-                <p className="text-xs text-gray-400 mb-3">by {recipe.userId.username}</p>
-                
-                <div className="flex items-center gap-3 text-sm text-gray-500 mb-4 flex-wrap">
-                  <span className="flex items-center gap-1"><Flame className="w-3.5 h-3.5" /> {recipe.calories}</span>
-                  <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {recipe.time_require}</span>
+          { !fetchAllRecipes ? (
+            <Loader />
+          ) : (
+            filteredRecipes.map((recipe) => (
+              <div key={recipe.$id} className="group bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-gray-200/50 hover:-translate-y-1 transition-all duration-300">
+                {/* Image Area */}
+                <div className={`h-48 relative flex items-center justify-center`}>
+                  {recipe.image_url ? (
+                    <img src={recipe.image_url} alt={recipe.prompt} className="w-full h-full object-cover" />
+                  ) : (
+                  <>
+                  {categoryColors.map((cat) => cat.name.toLowerCase() === recipe.category.toLowerCase() && cat.icon)}
+                  <span className={`absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-bold bg-gray-100`}>
+                    {recipe.category}
+                  </span>
+                  </>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                  <Link to={`/recipe/${recipe.$id}`} className="text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors">
-                    View
-                  </Link>
+                <div className="p-5">
+                  <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-orange-600 cursor-pointer transition-colors">{recipe.prompt.slice(0, 50)}{recipe.prompt.length > 50 ? '...' : ''}</h3>
+                  <p className="text-xs text-gray-400 mb-3">by {recipe.userId.username}</p>
+                  
+                  <div className="flex items-center gap-3 text-sm text-gray-500 mb-4 flex-wrap">
+                    <span className="flex items-center gap-1"><Flame className="w-3.5 h-3.5" /> {recipe.calories}</span>
+                    <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {recipe.time_require}</span>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                    <Link to={`/recipe/${recipe.$id}`} className="text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors">
+                      View
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* Load More */}

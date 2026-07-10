@@ -4,7 +4,7 @@ const register = async (username, email, password ,isAgree) => {
     try {
         const response = await account.create(
             {
-                userId: uId,
+                userId: uId.unique(),
                 email: email,
                 password: password,
                 name: username 
@@ -78,7 +78,7 @@ const submitFeedback = async (formData) => {
         const response = await tablesDB.createRow({
             databaseId: DATABASE_ID,
             tableId: FEEDBACK_COLLECTION_ID,
-            rowId: uId,
+            rowId: uId.unique(),
             data: {
                 userId: user.$id,
                 ...formData

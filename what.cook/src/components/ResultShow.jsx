@@ -7,24 +7,24 @@ import {
   Apple,
   Wheat,
   Fish,
-  Heart,
+  Bookmark,
   Beef,
   ListOrdered,
   Image as ImageIcon,
   Upload,
   Save
 } from 'lucide-react';
-import { useContext, useState } from 'react';
+import { useContext, useState, useCallback, useEffect } from 'react';
 import { DataContext } from '../context/DataContext';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { AuthContext } from '../context/AuthContext';
+import Loader from "./Loader.jsx";
 
 
 const ResultShow = ({value}) => {
     const { user } = useContext(AuthContext);
-    const { postLiked , loading , handleImageUpload } = useContext(DataContext);
+    const { postSaved , loading , handleImageUpload , isRecipeSaved , recipeSaved } = useContext(DataContext);
     const [file , setFile] = useState(null);
-    const { $id , prompt , calories, dish_name, aiResponse : steps, carbs, protein, total_likes , is_liked , fat, ingredients = [], time_require , category , image_url , userId } = value || {};
+    const { $id , prompt , calories, dish_name, aiResponse : steps, carbs, protein, fat, ingredients = [], time_require , category , image_url , userId } = value || {};
     const categories = [
       { name: 'All', icon: <ChefHat className="w-4 h-4 text-orange-300" /> },
       { name: 'Vegan', icon: <Leaf className="w-4 h-4 text-green-300" /> },
@@ -33,18 +33,23 @@ const ResultShow = ({value}) => {
       { name: 'Gluten-Free', icon: <Wheat className="w-4 h-4 text-yellow-300" /> },
       { name: 'Seafood', icon: <Fish className="w-4 h-4 text-blue-300" /> },
     ];
-    
+
+    const toggle = async () => {
+      await postSaved($id);
+      await isRecipeSaved($id);
+    }
+
+    useEffect(() => {
+      if($id) {
+        isRecipeSaved($id);
+      }
+    }, [$id]);
+
     const categoryIcon = categories.find((cat) => cat.name.toLowerCase() === category?.toLowerCase())?.icon;
 
     if(loading){
       return (
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-          <DotLottieReact
-            src="https://lottie.host/773d5408-315c-4c45-8225-a194a55b78fe/609P7xtf59.lottie"
-            loop
-            autoplay
-          />
-        </div>
+          <Loader />
       );
     }
 
@@ -115,11 +120,10 @@ const ResultShow = ({value}) => {
                           </div>
                         </div>
                       ))}
-                      <div onClick={() => postLiked($id)} className={`p-3 cursor-pointer rounded-2xl bg-gray-50 border border-gray-100 flex items-center gap-3 ${is_liked ? 'bg-red-50 border-red-200' : ''}`}>
-                        <div className="text-orange-500"><Heart className="w-4 h-4" /></div>
+                      <div onClick={toggle} className={`p-3 cursor-pointer bg-gray-50 border border-gray-100 rounded-2xl flex items-center gap-3 ${recipeSaved ? 'bg-red-50 border-red-200' : ''}`}>
+                        <div className="text-orange-500"><Bookmark className="w-4 h-4"/></div>
                         <div>
-                          <div className="text-xs text-gray-400">{is_liked ? 'Liked' : 'Likes'}</div>
-                          <div className="font-semibold text-gray-900">{total_likes}</div>
+                          <div className="text-xs text-gray-400">{recipeSaved ? 'Saved' : 'BookMark'}</div>
                         </div>
                         
                       </div>
