@@ -13,7 +13,7 @@ const USERS_COLLECTION_ID = import.meta.env.VITE_USERS_COLLECTION_ID;
 const RECIPE_COLLECTION_ID = import.meta.env.VITE_RECIPE_COLLECTION_ID;
 const FEEDBACK_COLLECTION_ID = import.meta.env.VITE_FEEDBACK_COLLECTION_ID;
 const SAVED_COLLECTION_ID = import.meta.env.VITE_SAVED_COLLECTION_ID;
-const RECIPE_BUCKET_ID = import.meta.env.VITE_RECIPES_BUCKET_ID;
+const RECIPE_BUCKET_ID = import.meta.env.VITE_RECIPES_BUCKET_ID || "6a4a18580014db13d5f7";
 const uId = ID;
 
 const account = new Account(client);
