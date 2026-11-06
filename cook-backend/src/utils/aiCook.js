@@ -8,9 +8,9 @@ const openai = new OpenAI({
 const aiCook = async (prompt) => {
     try{
         const response = await openai.responses.create({
-            model: "openai/gpt-oss-120b",
+            model: "nvidia/nemotron-3.5-super-vl-120b-a12b",
             input: prompt,
-            max_output_tokens: 4096,
+            max_output_tokens: 16384,
             top_p: 1,
             temperature: 1,
             stream: false
